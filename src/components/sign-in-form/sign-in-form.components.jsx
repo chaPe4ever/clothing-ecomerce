@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
 import {
@@ -19,8 +19,12 @@ const SignInForm = () => {
   const { email, password } = formFields;
 
   const logGoogleUser = async () => {
-    const { user } = await signInWithGooglePopup();
-    await createUserDocumentFromAuth(user);
+    try {
+      await signInWithGooglePopup();
+    } catch (error) {
+      console.log(error);
+      alert("There was an error signing in with google");
+    }
   };
 
   const handleChange = (event) => {

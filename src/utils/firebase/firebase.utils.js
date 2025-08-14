@@ -5,6 +5,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
+  onAuthStateChanged,
+  signOut,
 } from "firebase/auth";
 
 import { EmailAuthProvider } from "firebase/auth/web-extension";
@@ -24,8 +26,6 @@ const app = initializeApp(firebaseConfig);
 
 const googleProvider = new GoogleAuthProvider(firebaseConfig);
 googleProvider.setCustomParameters({ prompt: "select_account" });
-
-const emailAuthProvider = new EmailAuthProvider(firebaseConfig);
 
 export const auth = getAuth();
 
@@ -66,11 +66,12 @@ export const createAuthUserWithEmailAndPassword = async (email, password) => {
   return await createUserWithEmailAndPassword(auth, email, password);
 };
 
-export const signInAuthUserWithEmailAndPassword = async ({
-  email,
-  password,
-}) => {
+export const signInAuthUserWithEmailAndPassword = async (email, password) => {
   if (!email || !password) return;
 
-  await signInWithEmailAndPassword(email, password);
+  return await signInWithEmailAndPassword(auth, email, password);
 };
+
+export const signOutUser = async () => await signOut(auth);
+
+export const onAuthStateChangedListener = (cb) => onAuthStateChanged(auth, cb);
