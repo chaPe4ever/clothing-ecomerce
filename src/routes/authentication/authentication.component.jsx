@@ -1,13 +1,14 @@
 import SignUpForm from "../../components/sign-up-form/sign-up-form.component";
 import SignInForm from "../../components/sign-in-form/sign-in-form.components";
-import "./authentication.stles.scss";
+import "./authentication.stles.jsx";
+import { AuthenticationContainer } from "./authentication.stles.jsx";
 
 const SignIn = () => {
   return (
-    <div className="authentication-container">
+    <AuthenticationContainer>
       <SignInForm />
       <SignUpForm />
-    </div>
+    </AuthenticationContainer>
   );
 };
 
