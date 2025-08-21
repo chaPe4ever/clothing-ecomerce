@@ -18,15 +18,9 @@ import {
   query,
   getDocs,
 } from "firebase/firestore";
+import config from "../config/env.config.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyD-u6o_zxQkGkgXvTl-eCfovA-vbI-piDc",
-  authDomain: "clothing-ecomerce-1e07b.firebaseapp.com",
-  projectId: "clothing-ecomerce-1e07b",
-  storageBucket: "clothing-ecomerce-1e07b.firebasestorage.app",
-  messagingSenderId: "860993652044",
-  appId: "1:860993652044:web:cc08f37782e29573ddfbe9",
-};
+const firebaseConfig = config.getFirebaseConfig();
 
 const app = initializeApp(firebaseConfig);
 
