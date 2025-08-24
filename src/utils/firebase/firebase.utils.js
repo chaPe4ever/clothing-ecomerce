@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApp } from "firebase/app";
 import {
   getAuth,
   signInWithPopup,
@@ -22,43 +22,61 @@ import config from "../config/env.config.js";
 
 const firebaseConfig = config.getFirebaseConfig();
 
-const app = initializeApp(firebaseConfig);
+// Initialize Firebase app only once
+let app;
+try {
+  app = initializeApp(firebaseConfig);
+} catch (error) {
+  // If app already exists, get the existing one
+  if (error.code === "app/duplicate-app") {
+    app = getApp();
+  } else {
+    console.error("Error initializing Firebase:", error);
+    throw error;
+  }
+}
 
-const googleProvider = new GoogleAuthProvider(firebaseConfig);
+const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: "select_account" });
 
-export const auth = getAuth();
+export const auth = getAuth(app);
 
 export const signInWithGooglePopup = async () =>
   await signInWithPopup(auth, googleProvider);
 
-export const db = getFirestore();
+export const db = getFirestore(app);
 
 export const createUserDocumentFromAuth = async (
   userAuth,
   additionalInformation = {}
 ) => {
   if (!userAuth) return;
-  const userDocRef = doc(db, "users", userAuth.uid);
-  const userSnapshot = await getDoc(userDocRef);
 
-  if (!userSnapshot.exists()) {
-    const { email, displayName } = userAuth;
-    const createdAt = new Date();
+  try {
+    const userDocRef = doc(db, "users", userAuth.uid);
+    const userSnapshot = await getDoc(userDocRef);
 
-    try {
-      await setDoc(userDocRef, {
-        displayName,
-        email,
-        createdAt,
-        ...additionalInformation,
-      });
-    } catch (error) {
-      console.log("error creating the user", error.message);
+    if (!userSnapshot.exists()) {
+      const { email, displayName } = userAuth;
+      const createdAt = new Date();
+
+      try {
+        await setDoc(userDocRef, {
+          displayName,
+          email,
+          createdAt,
+          ...additionalInformation,
+        });
+      } catch (error) {
+        console.error("Error creating user document:", error.message);
+      }
     }
-  }
 
-  return userDocRef;
+    return userDocRef;
+  } catch (error) {
+    console.error("Error accessing user document:", error.message);
+    return null;
+  }
 };
 
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
@@ -93,15 +111,15 @@ export const addCollectionAndDocuments = async (
 };
 
 export const getCategoriesAndDocuments = async () => {
-  const collectionRef = collection(db, "categories");
-  const q = query(collectionRef);
+  try {
+    const collectionRef = collection(db, "categories");
+    const q = query(collectionRef);
 
-  const querySnapshot = await getDocs(q);
-  const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
-    const { title, items } = docSnapshot.data();
-    acc[title.toLowerCase()] = items;
-    return acc;
-  }, {});
-
-  return categoryMap;
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map((docSnapshot) => docSnapshot.data());
+  } catch (error) {
+    console.error("Error fetching categories from Firestore:", error);
+    // Return empty object as fallback
+    return {};
+  }
 };
