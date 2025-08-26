@@ -2,7 +2,7 @@ import { createAction } from "../../utils/reducer/reducer.utils";
 import { CART_ACTION_TYPES } from "./cart.types";
 
 const addCartItem = (cartItems, productToAdd) => {
-  if (cartItems.find((cartItem) => cartItem.id == productToAdd.id)) {
+  if (cartItems.find((cartItem) => cartItem.id === productToAdd.id)) {
     return cartItems.map((cartItem) =>
       cartItem.id === productToAdd.id
         ? { ...cartItem, quantity: cartItem.quantity + 1 }

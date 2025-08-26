@@ -17,6 +17,10 @@ const config = {
     apiUrl: process.env.REACT_APP_API_URL || "http://localhost:3000",
   },
 
+  stripe: {
+    publishableKey: process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY,
+  },
+
   // Validation
   validate() {
     // Debug: Log all environment variables
@@ -48,6 +52,10 @@ const config = {
     console.log(
       "REACT_APP_MEASUREMENT_ID:",
       process.env.REACT_APP_MEASUREMENT_ID ? "✓ Set" : "✗ Missing"
+    );
+    console.log(
+      "REACT_APP_STRIPE_PUBLISHABLE_KEY:",
+      process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY ? "✓ Set" : "✗ Missing"
     );
 
     const requiredFirebaseVars = [
@@ -90,6 +98,10 @@ const config = {
 
   getFirebaseConfig() {
     return this.firebase;
+  },
+
+  getStripe() {
+    return this.stripe;
   },
 };
 
