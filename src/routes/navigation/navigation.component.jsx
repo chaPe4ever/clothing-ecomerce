@@ -1,5 +1,5 @@
-import { Link, Outlet } from "react-router-dom";
-import { Fragment, useContext } from "react";
+import { Outlet } from "react-router-dom";
+import { Fragment } from "react";
 import { ReactComponent as AppLogo } from "../../assets/crown.svg";
 import "./navigation.styles.jsx";
 

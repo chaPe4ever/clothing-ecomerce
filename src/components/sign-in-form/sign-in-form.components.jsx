@@ -1,12 +1,10 @@
 import { useState } from "react";
 import FormInput from "../form-input/form-input.component";
 import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
-import { signInAuthUserWithEmailAndPassword } from "../../utils/firebase/firebase.utils";
 
 import "./sign-in-form.styles.jsx";
 import { ButtonsContainer, SignInContainer } from "./sign-in-form.styles.jsx";
 import { useDispatch } from "react-redux";
-import { USER_ACTION_TYPES } from "../../store/user/user.types.js";
 import {
   emailSignInStart,
   googleSignInStart,

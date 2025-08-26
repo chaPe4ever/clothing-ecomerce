@@ -1,4 +1,3 @@
-import { useContext } from "react";
 import Button from "../button/button.component";
 import "./cart-dropdown.styles.jsx";
 import CartItem from "../cart-item/cart-item.component";
